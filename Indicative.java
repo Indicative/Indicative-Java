@@ -25,34 +25,52 @@ import java.util.logging.Logger;
  *
  * Nonblocking, asynchronous... Shouldn't break your app.
  *
- * Usage: Indicative.event("your-Api-Key",
- * "Registration").uniqueId("user47").addProperty("name","value").done();
+ * Usage:
+ * Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
  *
  * Note: You MUST call done() at the end...
  *
  */
 public class Indicative {
 
+    /**
+     * The API key associated with your project. Use different API keys for your
+     * development and production environments.
+     */
+    private static final String API_KEY = "Your-Api-Key-Goes-Here";
     private static final Logger LOG = Logger.getLogger(Indicative.class.getName());
-    /*
+    /**
      * The number of threads to use when POSTing to the endpoint
      */
     private static final int THREADS = 5;
     private static ExecutorService pool = Executors.newFixedThreadPool(THREADS);
-    private static final String REST_ENDPOINT_URL = "http://api.skunkalytics.com/service/event";
-    /*
+    private static final String REST_ENDPOINT_URL = "http://api.indicative.com/service/event";
+    /**
      * Enable this to see some basic details printed to the default logger
      */
     private static final boolean DEBUG = false;
 
+    /**
+     * A class used to asynchronously post events to the Indicative API
+     * endpoint.
+     */
     private static class PostThread implements Runnable {
 
         Indicative event;
 
+        /**
+         * A constructor that sets the event for the PostThread to send.
+         *
+         * @param event The event to send to the Indicative API endpoint.
+         */
         private PostThread(Indicative event) {
             this.event = event;
         }
 
+        /**
+         * Creates a JSON representation of the event and sends it to the
+         * Indicative API endpoint.
+         */
         @Override
         public void run() {
             StringBuilder json = new StringBuilder();
@@ -83,6 +101,11 @@ public class Indicative {
             sendPost(json.toString());
         }
 
+        /**
+         * Sends the event to the Indicative API endpoint via an HTTP POST.
+         *
+         * @param body
+         */
         private void sendPost(String body) {
             HttpURLConnection con = null;
             DataOutputStream wr = null;
@@ -90,11 +113,10 @@ public class Indicative {
                 URL url = new URL(REST_ENDPOINT_URL);
                 con = (HttpURLConnection) url.openConnection();
 
-                //add reuqest header
+                // Add request header
                 con.setRequestMethod("POST");
                 con.addRequestProperty("Content-Type", "application/json");
                 con.setRequestProperty("Content-Length", "" + Integer.toString(body.getBytes("UTF-8").length));
-
 
                 // Send post request
                 con.setDoOutput(true);
@@ -147,35 +169,145 @@ public class Indicative {
         }
     }
 
+    /**
+     * Creates a new Thread to asynchronously post the event. This MUST be
+     * called once you're done building the event. Otherwise, the event will not
+     * be submitted to the API.
+     */
     public void done() {
         pool.execute(new PostThread(this));
     }
 
-    public static Indicative event(String apiKey, String eventName) {
-        return new Indicative(apiKey, eventName);
+    /**
+     * Instantiates a new Indicative object and initializes it with the name of
+     * your event.
+     *
+     * @param eventName The name of your event.
+     * @return The newly created Indicative object.
+     */
+    public static Indicative event(String eventName) {
+        return new Indicative(eventName);
     }
 
-    protected Indicative(String apiKey, String eventName) {
-        this.apiKey = apiKey;
+    /**
+     * A constructor that sets the initial values for the Indicative object's
+     * apiKey, eventName, and eventTime fields.
+     *
+     * @param eventName The name of your event.
+     */
+    protected Indicative(String eventName) {
+        this.apiKey = API_KEY;
         this.eventName = eventName;
         this.eventTime = System.currentTimeMillis();
 
     }
 
+    /**
+     * Sets the Indicative object's eventTime field.
+     *
+     * @param eventTime The UNIX timestamp (in milliseconds) when your event
+     * occurred.
+     * @return The modified Indicative object.
+     */
     public Indicative addEventTime(long eventTime) {
         this.eventTime = eventTime;
         return this;
     }
 
+    /**
+     * Adds a property name/value pair to the Indicative object's Map of
+     * properties.
+     *
+     * @param name The name of the property.
+     * @param value The value of the property.
+     * @return The modified Indicative object.
+     */
     public Indicative addProperty(String name, String value) {
-        if (properties == null) {
-            properties = new HashMap<String, String>();
-        }
         properties.put(name, value);
         return this;
     }
 
-    protected Indicative uniqueId(String eventUniqueId) {
+    /**
+     * Adds a property name/value pair to the Indicative object's Map of
+     * properties.
+     *
+     * @param name The name of the property.
+     * @param value The value of the property.
+     * @return The modified Indicative object.
+     */
+    public Indicative addProperty(String name, int value) {
+        return addProperty(name, String.valueOf((Object) value));
+    }
+
+    /**
+     * Adds a property name/value pair to the Indicative object's Map of
+     * properties.
+     *
+     * @param name The name of the property.
+     * @param value The value of the property.
+     * @return The modified Indicative object.
+     */
+    public Indicative addProperty(String name, long value) {
+        return addProperty(name, String.valueOf((Object) value));
+    }
+
+    /**
+     * Adds a property name/value pair to the Indicative object's Map of
+     * properties.
+     *
+     * @param name The name of the property.
+     * @param value The value of the property.
+     * @return The modified Indicative object.
+     */
+    public Indicative addProperty(String name, float value) {
+        return addProperty(name, String.valueOf((Object) value));
+    }
+
+    /**
+     * Adds a property name/value pair to the Indicative object's Map of
+     * properties.
+     *
+     * @param name The name of the property.
+     * @param value The value of the property.
+     * @return The modified Indicative object.
+     */
+    public Indicative addProperty(String name, double value) {
+        return addProperty(name, String.valueOf((Object) value));
+    }
+
+    /**
+     * Adds a property name/value pair to the Indicative object's Map of
+     * properties.
+     *
+     * @param name The name of the property.
+     * @param value The value of the property.
+     * @return The modified Indicative object.
+     */
+    public Indicative addProperty(String name, boolean value) {
+        return addProperty(name, String.valueOf((Object) value));
+    }
+
+    /**
+     * Adds a Map of property name/value pairs to the Indicative object's Map of
+     * properties.
+     *
+     * @param propertyMap A map of Strings representing property names and
+     * values.
+     * @return The modified Indicative object.
+     */
+    public Indicative addProperties(Map<String, String> propertyMap) {
+        properties.putAll(propertyMap);
+        return this;
+    }
+
+    /**
+     * Adds the user's unique identifier to the Indicative object.
+     *
+     * @param eventUniqueId The unique identifier for the user responsible for
+     * the event.
+     * @return The modified Indicative object.
+     */
+    public Indicative uniqueId(String eventUniqueId) {
         this.eventUniqueId = eventUniqueId;
         return this;
     }
@@ -183,13 +315,15 @@ public class Indicative {
     String eventName;
     long eventTime;
     String eventUniqueId;
-    Map<String, String> properties;
+    Map<String, String> properties = new HashMap<String, String>();
 
     /**
-     * " => \" , \ => \\
+     * Escapes special characters in a String with a backslash character for use
+     * in the JSON representation of an event. For example: the character "
+     * becomes \" and \ becomes \\
      *
-     * @param s
-     * @return
+     * @param s The original String.
+     * @return The String with its special characters escaped.
      */
     public static String escape(String s) {
         if (s == null) {
