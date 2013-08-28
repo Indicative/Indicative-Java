@@ -10,8 +10,8 @@ Features:
 
 Sample usage:
 
-    // Replace the String below with your project's API key. You can find that by logging in at indicative.com
-    // and navigating to the Project Settings page.
+    // Replace the String below with your project's API key. You can find 
+    // yours by logging in at indicative.com and navigating to the Project Settings page.
     private static final String API_KEY = "Your-Api-Key-Goes-Here";
     
     // Record events with a single line of code, demonstrated here
