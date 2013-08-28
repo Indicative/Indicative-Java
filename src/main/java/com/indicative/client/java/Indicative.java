@@ -44,7 +44,7 @@ public class Indicative {
      */
     private static final int THREADS = 5;
     private static ExecutorService pool = Executors.newFixedThreadPool(THREADS);
-    private static final String REST_ENDPOINT_URL = "http://api.indicative.com/service/event";
+    private static final String REST_ENDPOINT_URL = "https://api.indicative.com/service/event";
     /**
      * Enable this to see some basic details printed to the default logger
      */
@@ -73,32 +73,7 @@ public class Indicative {
          */
         @Override
         public void run() {
-            StringBuilder json = new StringBuilder();
-
-            json.append("{ ");
-            json.append("\"projectId\" : \"").append(escape(event.apiKey)).append("\", ");
-            if (event.eventUniqueId != null) {
-                json.append("\"eventUniqueId\" :  \"").append(escape(event.eventUniqueId)).append("\", ");
-            }
-            json.append("\"eventName\" : \"").append(escape(event.eventName)).append("\", ");
-            json.append("\"eventTime\" : ").append(event.eventTime).append(", ");
-            json.append("\"properties\" : { ");
-
-            if (event.properties != null) {
-                Iterator<Entry<String, String>> it = event.properties.entrySet().iterator();
-                while (it.hasNext()) {
-                    Entry<String, String> property = it.next();
-                    json.append("\"").append(escape(property.getKey())).append("\" : \"").append(escape(property.getValue())).append("\"");
-                    if (it.hasNext()) {
-                        json.append(",");
-                    }
-
-                }
-            }
-            json.append(" }");
-            json.append("}");
-
-            sendPost(json.toString());
+            sendPost(event.toJson());
         }
 
         /**
@@ -296,7 +271,9 @@ public class Indicative {
      * @return The modified Indicative object.
      */
     public Indicative addProperties(Map<String, String> propertyMap) {
-        properties.putAll(propertyMap);
+        if (propertyMap != null) {
+            properties.putAll(propertyMap);
+        }
         return this;
     }
 
@@ -316,6 +293,40 @@ public class Indicative {
     long eventTime;
     String eventUniqueId;
     Map<String, String> properties = new HashMap<String, String>();
+
+    /**
+     * Serializes the event to a JSON String.
+     *
+     * @return The JSON representation of the event.
+     */
+    public String toJson() {
+        StringBuilder json = new StringBuilder();
+
+        json.append("{ ");
+        json.append("\"apiKey\" : \"").append(escape(this.apiKey)).append("\", ");
+        if (this.eventUniqueId != null) {
+            json.append("\"eventUniqueId\" : \"").append(escape(this.eventUniqueId)).append("\", ");
+        }
+        json.append("\"eventName\" : \"").append(escape(this.eventName)).append("\", ");
+        json.append("\"eventTime\" : ").append(this.eventTime).append(", ");
+        json.append("\"properties\" : { ");
+
+        if (this.properties != null) {
+            Iterator<Entry<String, String>> it = this.properties.entrySet().iterator();
+            while (it.hasNext()) {
+                Entry<String, String> property = it.next();
+                json.append("\"").append(escape(property.getKey())).append("\" : \"").append(escape(property.getValue())).append("\"");
+                if (it.hasNext()) {
+                    json.append(",");
+                }
+
+            }
+        }
+        json.append(" }");
+        json.append("}");
+
+        return json.toString();
+    }
 
     /**
      * Escapes special characters in a String with a backslash character for use
