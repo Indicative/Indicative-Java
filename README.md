@@ -1,12 +1,24 @@
-Java
-====
-
 Java Client for Indicative's REST API
 
-This REST client creates a JSON representation of your event and asynchronously posts it to our endpoint.  It has no external dependencies, so you'll never have library conflicts, and it should never slow down or break your app.  You should modify and extend this class to your heart's content.  As a best practice, consider adding a method that takes as a parameter the object representing the user, and adds certain default properties based on that user's characteristics (e.g., gender, age, etc.).
+This REST client creates a JSON representation of your event and posts it to Indicative's Event endpoint.
 
-Sample usage: 
+Features:
 
++ No external dependencies, so you'll never have library conflicts
++ Asynchronous, designed to never slow down or break your app
++ Fault tolerent
+
+Sample usage:
+
+    // Replace the String below with your project's API key. You can find that by logging in at indicative.com
+    // and navigating to the Project Settings page.
+    private static final String API_KEY = "Your-Api-Key-Goes-Here";
+    
+    // Record events with a single line of code, demonstrated here
     Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
+
+You should modify and extend this class to your heart's content.  If you make any changes please send a pull request!
+
+As a best practice, consider adding a method that takes as a parameter the object representing your user, and adds certain default properties based on that user's characteristics (e.g., gender, age, etc.).
 
 For more details, see our documentation at: http://www.indicative.com/docs/integration.html
