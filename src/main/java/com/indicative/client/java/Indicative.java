@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.indicative.client.java;
 
 import java.io.BufferedReader;
@@ -21,9 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A fairly basic REST client for posting events to the Indicative Endpoint.
- *
- * Nonblocking, asynchronous... Shouldn't break your app.
+ * A REST client for posting events to the Indicative Endpoint.
  *
  * Usage:
  * Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
@@ -38,13 +32,6 @@ public class Indicative {
      * development and production environments.
      */
     private static final String API_KEY = "Your-Api-Key-Goes-Here";
-    private static final Logger LOG = Logger.getLogger(Indicative.class.getName());
-    /**
-     * The number of threads to use when POSTing to the endpoint
-     */
-    private static final int THREADS = 5;
-    private static ExecutorService pool = Executors.newFixedThreadPool(THREADS);
-    private static final String REST_ENDPOINT_URL = "https://api.indicative.com/service/event";
     /**
      * Enable this to see some basic details printed to the default logger
      */
@@ -280,7 +267,7 @@ public class Indicative {
     /**
      * Adds the user's unique identifier to the Indicative object.
      *
-     * @param eventUniqueId The unique identifier for the user responsible for
+     * @param eventUniqueId The unique identifier for the user associated with
      * the event.
      * @return The modified Indicative object.
      */
@@ -392,4 +379,29 @@ public class Indicative {
         }//for
         return sb.toString();
     }
+    
+    /**
+     * An example of the kind of method you should create to easily add groups
+     * of properties to every event.  This method should take as a parameter an 
+     * Object representing your user, and add certain properties based on that users's
+     * attributes.
+     */
+    
+    /**
+     public Indicative addCommonProperties(UsersEntity user){
+        properties.add("Gender", user.getGender()); 
+        properties.add("Age", user.getAge());
+     
+        return this; 
+     }
+     
+     */
+    
+    private static final Logger LOG = Logger.getLogger(Indicative.class.getName());
+    /**
+     * The number of threads to use when POSTing to the endpoint
+     */
+    private static final int THREADS = 5;
+    private static ExecutorService pool = Executors.newFixedThreadPool(THREADS);
+    private static final String REST_ENDPOINT_URL = "https://api.indicative.com/service/event";
 }
