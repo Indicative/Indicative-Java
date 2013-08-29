@@ -14,7 +14,7 @@ Sample usage:
     // logging in at indicative.com and navigating to the Project Settings page.
     private static final String API_KEY = "Your-Api-Key-Goes-Here";
     
-    // Record events with a single line of code, demonstrated here
+    // Record events with a single line of code
     Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
 
 You should modify and extend this class to your heart's content.  If you make any changes please send a pull request!
