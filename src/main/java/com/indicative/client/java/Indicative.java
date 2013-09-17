@@ -152,18 +152,45 @@ public class Indicative {
     }
 
     /**
+     * Instantiates a new Indicative object and initializes it with the name of
+     * your event using the specified key
+     *
+     * @param eventName The name of your event.
+     * @return The newly created Indicative object.
+     */
+    public static Indicative event(String eventName, String apiKey) {
+        return new Indicative(eventName, apiKey);
+    }
+    
+    /**
      * A constructor that sets the initial values for the Indicative object's
      * apiKey, eventName, and eventTime fields.
      *
      * @param eventName The name of your event.
      */
     protected Indicative(String eventName) {
-        this.apiKey = API_KEY;
+        this(eventName, null);
+    }
+
+    /**
+     * A constructor that sets the initial values for the Indicative object's
+     * apiKey, eventName, and eventTime fields.
+     *
+     * @param eventName The name of your event.
+     * @param apiKey The apiKey you want to use
+     */
+    protected Indicative(String eventName, String apiKey) {
+        if (apiKey == null) {
+            this.apiKey = API_KEY;
+        } else {
+            this.apiKey = apiKey;
+        }
+        
         this.eventName = eventName;
         this.eventTime = System.currentTimeMillis();
 
     }
-
+    
     /**
      * Sets the Indicative object's eventTime field.
      *
