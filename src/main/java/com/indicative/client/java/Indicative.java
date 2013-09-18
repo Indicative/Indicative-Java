@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  * A REST client for posting events to the Indicative Endpoint.
  *
  * Usage:
+ * Indicative.apiKey("Your-Api-Key-Goes-Here");
  * Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
  *
  * Note: You MUST call done() at the end...
@@ -31,7 +32,8 @@ public class Indicative {
      * The API key associated with your project. Use different API keys for your
      * development and production environments.
      */
-    private static final String API_KEY = "Your-Api-Key-Goes-Here";
+    private static String API_KEY = "Your-Api-Key-Goes-Here";
+    
     /**
      * Enable this to see some basic details printed to the default logger
      */
@@ -77,7 +79,8 @@ public class Indicative {
 
                 // Add request header
                 con.setRequestMethod("POST");
-                con.addRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Accept-Charset", "UTF-8");
+                con.addRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 con.setRequestProperty("Content-Length", "" + Integer.toString(body.getBytes("UTF-8").length));
 
                 // Send post request
@@ -140,6 +143,10 @@ public class Indicative {
         pool.execute(new PostThread(this));
     }
 
+    public static void apiKey(String apiKey) {
+        Indicative.API_KEY = apiKey;
+    }
+    
     /**
      * Instantiates a new Indicative object and initializes it with the name of
      * your event.
@@ -150,7 +157,7 @@ public class Indicative {
     public static Indicative event(String eventName) {
         return new Indicative(eventName);
     }
-
+    
     /**
      * A constructor that sets the initial values for the Indicative object's
      * apiKey, eventName, and eventTime fields.
@@ -158,12 +165,28 @@ public class Indicative {
      * @param eventName The name of your event.
      */
     protected Indicative(String eventName) {
-        this.apiKey = API_KEY;
+        this(eventName, null);
+    }
+
+    /**
+     * A constructor that sets the initial values for the Indicative object's
+     * apiKey, eventName, and eventTime fields.
+     *
+     * @param eventName The name of your event.
+     * @param apiKey The apiKey you want to use
+     */
+    protected Indicative(String eventName, String apiKey) {
+        if (apiKey == null) {
+            this.apiKey = API_KEY;
+        } else {
+            this.apiKey = apiKey;
+        }
+        
         this.eventName = eventName;
         this.eventTime = System.currentTimeMillis();
 
     }
-
+    
     /**
      * Sets the Indicative object's eventTime field.
      *
@@ -275,6 +298,7 @@ public class Indicative {
         this.eventUniqueId = eventUniqueId;
         return this;
     }
+    
     String apiKey;
     String eventName;
     long eventTime;
