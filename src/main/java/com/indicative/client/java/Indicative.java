@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  * A REST client for posting events to the Indicative Endpoint.
  *
  * Usage:
+ * Indicative.apiKey("Your-Api-Key-Goes-Here");
  * Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
  *
  * Note: You MUST call done() at the end...
@@ -31,7 +32,8 @@ public class Indicative {
      * The API key associated with your project. Use different API keys for your
      * development and production environments.
      */
-    private static final String API_KEY = "Your-Api-Key-Goes-Here";
+    private static String API_KEY = "Your-Api-Key-Goes-Here";
+    
     /**
      * Enable this to see some basic details printed to the default logger
      */
@@ -141,6 +143,10 @@ public class Indicative {
         pool.execute(new PostThread(this));
     }
 
+    public static void apiKey(String apiKey) {
+        Indicative.API_KEY = apiKey;
+    }
+    
     /**
      * Instantiates a new Indicative object and initializes it with the name of
      * your event.
@@ -150,17 +156,6 @@ public class Indicative {
      */
     public static Indicative event(String eventName) {
         return new Indicative(eventName);
-    }
-
-    /**
-     * Instantiates a new Indicative object and initializes it with the name of
-     * your event using the specified key
-     *
-     * @param eventName The name of your event.
-     * @return The newly created Indicative object.
-     */
-    public static Indicative event(String eventName, String apiKey) {
-        return new Indicative(eventName, apiKey);
     }
     
     /**
@@ -303,6 +298,7 @@ public class Indicative {
         this.eventUniqueId = eventUniqueId;
         return this;
     }
+    
     String apiKey;
     String eventName;
     long eventTime;
