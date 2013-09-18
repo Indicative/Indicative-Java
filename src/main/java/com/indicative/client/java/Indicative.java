@@ -77,7 +77,8 @@ public class Indicative {
 
                 // Add request header
                 con.setRequestMethod("POST");
-                con.addRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Accept-Charset", "UTF-8");
+                con.addRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 con.setRequestProperty("Content-Length", "" + Integer.toString(body.getBytes("UTF-8").length));
 
                 // Send post request
