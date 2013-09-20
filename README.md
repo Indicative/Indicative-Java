@@ -12,7 +12,7 @@ Sample usage:
 
     // First, call the Indicative class's apiKey() method and pass in your API key, 
     // which you can find on the Project Settings page. You'll only have to do this once.
-    Indicative.apiKey("My Key");
+    Indicative.apiKey("Your-API-Key-Goes-Here");
 
     // Then record events with a single line of code.
     Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
