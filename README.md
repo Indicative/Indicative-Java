@@ -10,11 +10,11 @@ Features:
 
 Sample usage:
 
-    // Replace the String below with your project's API key. You can find yours by 
-    // logging in at indicative.com and navigating to the Project Settings page.
-    private static final String API_KEY = "Your-Api-Key-Goes-Here";
-    
-    // Record events with a single line of code
+    // First, call the Indicative class's apiKey() method and pass in your API key, 
+    // which you can find on the Project Settings page. You'll only have to do this once.
+    Indicative.apiKey("My Key");
+
+    // Then record events with a single line of code.
     Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
 
 You should modify and extend this class to your heart's content.  If you make any changes please send a pull request!
