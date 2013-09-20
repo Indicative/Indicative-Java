@@ -4,12 +4,33 @@
 
     <groupId>com.indicative.client.java</groupId>
     <artifactId>Indicative-Java</artifactId>
-    <version>1.0-RELEASE</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Indicative-Java</name>
     <url>https://github.com/Indicative/Indicative-Java</url>
-
+    
+    <scm>
+        <url>https://github.com/Indicative/Indicative-Java</url>
+        <connection>scm:git:git@github.com:Indicative/Indicative-Java.git</connection>
+        <developerConnection>scm:git:git@github.com:Indicative/Indicative-Java.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                   <source>1.6</source>
+                   <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
