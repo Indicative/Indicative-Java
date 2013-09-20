@@ -19,8 +19,7 @@ import java.util.logging.Logger;
 /**
  * A REST client for posting events to the Indicative Endpoint.
  *
- * Usage:
- * Indicative.apiKey("Your-Api-Key-Goes-Here");
+ * Usage: Indicative.apiKey("Your-Api-Key-Goes-Here");
  * Indicative.event("Registration").uniqueId("user47").addProperty("name","value").done();
  *
  * Note: You MUST call done() at the end...
@@ -32,32 +31,31 @@ public class Indicative {
      * The API key associated with your project. Use different API keys for your
      * development and production environments.
      */
-    private static String API_KEY = "Your-Api-Key-Goes-Here";
-    
+    private static String API_KEY = "Your-API-Key";
     /**
      * Enable this to see some basic details printed to the default logger
      */
     private static final boolean DEBUG = false;
-
+    
     /**
-     * A class used to asynchronously post events to the Indicative API
+     * A class used to asynchronously post Events to the Indicative API
      * endpoint.
      */
     private static class PostThread implements Runnable {
 
-        Indicative event;
+        Event event;
 
         /**
-         * A constructor that sets the event for the PostThread to send.
+         * A constructor that sets the Event for the PostThread to send.
          *
-         * @param event The event to send to the Indicative API endpoint.
+         * @param event The Event to send to the Indicative API endpoint.
          */
-        private PostThread(Indicative event) {
+        private PostThread(Event event) {
             this.event = event;
         }
 
         /**
-         * Creates a JSON representation of the event and sends it to the
+         * Creates a JSON representation of the Event and sends it to the
          * Indicative API endpoint.
          */
         @Override
@@ -66,7 +64,7 @@ public class Indicative {
         }
 
         /**
-         * Sends the event to the Indicative API endpoint via an HTTP POST.
+         * Sends the Event's JSON representation to the Indicative API endpoint via an HTTP POST.
          *
          * @param body
          */
@@ -133,210 +131,222 @@ public class Indicative {
             }
         }
     }
-
+    
     /**
-     * Creates a new Thread to asynchronously post the event. This MUST be
-     * called once you're done building the event. Otherwise, the event will not
-     * be submitted to the API.
+     * Sets the static apiKey value.  You should call this once before recording any events.
+     * 
+     * @param apiKey The API key for your project. You can find this on your Project Settings page.
      */
-    public void done() {
-        pool.execute(new PostThread(this));
-    }
 
     public static void apiKey(String apiKey) {
         Indicative.API_KEY = apiKey;
     }
-    
+
     /**
-     * Instantiates a new Indicative object and initializes it with the name of
-     * your event.
+     * Instantiates a new Event object and initializes it with the name of your
+     * event.
      *
      * @param eventName The name of your event.
-     * @return The newly created Indicative object.
+     * @return The newly created Event object.
      */
-    public static Indicative event(String eventName) {
-        return new Indicative(eventName);
+    public static Event event(String eventName) {
+        return new Event(eventName);
     }
     
     /**
-     * A constructor that sets the initial values for the Indicative object's
-     * apiKey, eventName, and eventTime fields.
-     *
-     * @param eventName The name of your event.
+     * A class representing the Event to be recorded.
      */
-    protected Indicative(String eventName) {
-        this(eventName, null);
-    }
 
-    /**
-     * A constructor that sets the initial values for the Indicative object's
-     * apiKey, eventName, and eventTime fields.
-     *
-     * @param eventName The name of your event.
-     * @param apiKey The apiKey you want to use
-     */
-    protected Indicative(String eventName, String apiKey) {
-        if (apiKey == null) {
-            this.apiKey = API_KEY;
-        } else {
-            this.apiKey = apiKey;
+    public static class Event {
+
+        /**
+         * A constructor that sets the initial values for the Event object's
+         * apiKey, eventName, and eventTime fields.
+         *
+         * @param eventName The name of your event.
+         */
+        protected Event(String eventName) {
+            this(eventName, null);
         }
-        
-        this.eventName = eventName;
-        this.eventTime = System.currentTimeMillis();
 
-    }
-    
-    /**
-     * Sets the Indicative object's eventTime field.
-     *
-     * @param eventTime The UNIX timestamp (in milliseconds) when your event
-     * occurred.
-     * @return The modified Indicative object.
-     */
-    public Indicative addEventTime(long eventTime) {
-        this.eventTime = eventTime;
-        return this;
-    }
-
-    /**
-     * Adds a property name/value pair to the Indicative object's Map of
-     * properties.
-     *
-     * @param name The name of the property.
-     * @param value The value of the property.
-     * @return The modified Indicative object.
-     */
-    public Indicative addProperty(String name, String value) {
-        properties.put(name, value);
-        return this;
-    }
-
-    /**
-     * Adds a property name/value pair to the Indicative object's Map of
-     * properties.
-     *
-     * @param name The name of the property.
-     * @param value The value of the property.
-     * @return The modified Indicative object.
-     */
-    public Indicative addProperty(String name, int value) {
-        return addProperty(name, String.valueOf((Object) value));
-    }
-
-    /**
-     * Adds a property name/value pair to the Indicative object's Map of
-     * properties.
-     *
-     * @param name The name of the property.
-     * @param value The value of the property.
-     * @return The modified Indicative object.
-     */
-    public Indicative addProperty(String name, long value) {
-        return addProperty(name, String.valueOf((Object) value));
-    }
-
-    /**
-     * Adds a property name/value pair to the Indicative object's Map of
-     * properties.
-     *
-     * @param name The name of the property.
-     * @param value The value of the property.
-     * @return The modified Indicative object.
-     */
-    public Indicative addProperty(String name, float value) {
-        return addProperty(name, String.valueOf((Object) value));
-    }
-
-    /**
-     * Adds a property name/value pair to the Indicative object's Map of
-     * properties.
-     *
-     * @param name The name of the property.
-     * @param value The value of the property.
-     * @return The modified Indicative object.
-     */
-    public Indicative addProperty(String name, double value) {
-        return addProperty(name, String.valueOf((Object) value));
-    }
-
-    /**
-     * Adds a property name/value pair to the Indicative object's Map of
-     * properties.
-     *
-     * @param name The name of the property.
-     * @param value The value of the property.
-     * @return The modified Indicative object.
-     */
-    public Indicative addProperty(String name, boolean value) {
-        return addProperty(name, String.valueOf((Object) value));
-    }
-
-    /**
-     * Adds a Map of property name/value pairs to the Indicative object's Map of
-     * properties.
-     *
-     * @param propertyMap A map of Strings representing property names and
-     * values.
-     * @return The modified Indicative object.
-     */
-    public Indicative addProperties(Map<String, String> propertyMap) {
-        if (propertyMap != null) {
-            properties.putAll(propertyMap);
-        }
-        return this;
-    }
-
-    /**
-     * Adds the user's unique identifier to the Indicative object.
-     *
-     * @param eventUniqueId The unique identifier for the user associated with
-     * the event.
-     * @return The modified Indicative object.
-     */
-    public Indicative uniqueId(String eventUniqueId) {
-        this.eventUniqueId = eventUniqueId;
-        return this;
-    }
-    
-    String apiKey;
-    String eventName;
-    long eventTime;
-    String eventUniqueId;
-    Map<String, String> properties = new HashMap<String, String>();
-
-    /**
-     * Serializes the event to a JSON String.
-     *
-     * @return The JSON representation of the event.
-     */
-    public String toJson() {
-        StringBuilder json = new StringBuilder();
-
-        json.append("{ ");
-        json.append("\"apiKey\" : \"").append(escape(this.apiKey)).append("\", ");
-        if (this.eventUniqueId != null) {
-            json.append("\"eventUniqueId\" : \"").append(escape(this.eventUniqueId)).append("\", ");
-        }
-        json.append("\"eventName\" : \"").append(escape(this.eventName)).append("\", ");
-        json.append("\"eventTime\" : ").append(this.eventTime).append(", ");
-        json.append("\"properties\" : { ");
-
-        if (this.properties != null) {
-            Iterator<Entry<String, String>> it = this.properties.entrySet().iterator();
-            while (it.hasNext()) {
-                Entry<String, String> property = it.next();
-                json.append("\"").append(escape(property.getKey())).append("\" : \"").append(escape(property.getValue())).append("\"");
-                if (it.hasNext()) {
-                    json.append(",");
-                }
-
+        /**
+         * A constructor that sets the initial values for the Event object's
+         * apiKey, eventName, and eventTime fields.
+         *
+         * @param eventName The name of your event.
+         * @param apiKey The apiKey you want to use
+         */
+        protected Event(String eventName, String apiKey) {
+            if (apiKey == null) {
+                this.apiKey = API_KEY;
+            } else {
+                this.apiKey = apiKey;
             }
-        }
-        json.append(" }");
-        json.append("}");
 
-        return json.toString();
+            this.eventName = eventName;
+            this.eventTime = System.currentTimeMillis();
+
+        }
+
+        /**
+         * Creates a new Thread to asynchronously post the event. This MUST be
+         * called once you're done building the event. Otherwise, the event will
+         * not be submitted to the API.
+         */
+        public void done() {
+            pool.execute(new PostThread(this));
+        }
+
+        /**
+         * Sets the Event object's eventTime field.
+         *
+         * @param eventTime The UNIX timestamp (in milliseconds) when your event
+         * occurred.
+         * @return The modified Event object.
+         */
+        public Event addEventTime(long eventTime) {
+            this.eventTime = eventTime;
+            return this;
+        }
+
+        /**
+         * Adds a property name/value pair to the Event object's Map of
+         * properties.
+         *
+         * @param name The name of the property.
+         * @param value The value of the property.
+         * @return The modified Event object.
+         */
+        public Event addProperty(String name, String value) {
+            properties.put(name, value);
+            return this;
+        }
+
+        /**
+         * Adds a property name/value pair to the Event object's Map of
+         * properties.
+         *
+         * @param name The name of the property.
+         * @param value The value of the property.
+         * @return The modified Event object.
+         */
+        public Event addProperty(String name, int value) {
+            return addProperty(name, String.valueOf((Object) value));
+        }
+
+        /**
+         * Adds a property name/value pair to the Event object's Map of
+         * properties.
+         *
+         * @param name The name of the property.
+         * @param value The value of the property.
+         * @return The modified Event object.
+         */
+        public Event addProperty(String name, long value) {
+            return addProperty(name, String.valueOf((Object) value));
+        }
+
+        /**
+         * Adds a property name/value pair to the Event object's Map of
+         * properties.
+         *
+         * @param name The name of the property.
+         * @param value The value of the property.
+         * @return The modified Event object.
+         */
+        public Event addProperty(String name, float value) {
+            return addProperty(name, String.valueOf((Object) value));
+        }
+
+        /**
+         * Adds a property name/value pair to the Event object's Map of
+         * properties.
+         *
+         * @param name The name of the property.
+         * @param value The value of the property.
+         * @return The modified Event object.
+         */
+        public Event addProperty(String name, double value) {
+            return addProperty(name, String.valueOf((Object) value));
+        }
+
+        /**
+         * Adds a property name/value pair to the Event object's Map of
+         * properties.
+         *
+         * @param name The name of the property.
+         * @param value The value of the property.
+         * @return The modified Event object.
+         */
+        public Event addProperty(String name, boolean value) {
+            return addProperty(name, String.valueOf((Object) value));
+        }
+
+        /**
+         * Adds a Map of property name/value pairs to the Event object's Map of
+         * properties.
+         *
+         * @param propertyMap A map of Strings representing property names and
+         * values.
+         * @return The modified Event object.
+         */
+        public Event addProperties(Map<String, String> propertyMap) {
+            if (propertyMap != null) {
+                properties.putAll(propertyMap);
+            }
+            return this;
+        }
+
+        /**
+         * Adds the user's unique identifier to the Event object.
+         *
+         * @param eventUniqueId The unique identifier for the user associated
+         * with the event.
+         * @return The modified Event object.
+         */
+        public Event uniqueId(String eventUniqueId) {
+            this.eventUniqueId = eventUniqueId;
+            return this;
+        }
+        String apiKey;
+        String eventName;
+        long eventTime;
+        String eventUniqueId;
+        Map<String, String> properties = new HashMap<String, String>();
+
+        /**
+         * Serializes the event to a JSON String.
+         *
+         * @return The JSON representation of the event.
+         */
+        public String toJson() {
+            StringBuilder json = new StringBuilder();
+
+            json.append("{ ");
+            json.append("\"apiKey\" : \"").append(escape(this.apiKey)).append("\", ");
+            if (this.eventUniqueId != null) {
+                json.append("\"eventUniqueId\" : \"").append(escape(this.eventUniqueId)).append("\", ");
+            }
+            json.append("\"eventName\" : \"").append(escape(this.eventName)).append("\", ");
+            json.append("\"eventTime\" : ").append(this.eventTime).append(", ");
+            json.append("\"properties\" : { ");
+
+            if (this.properties != null) {
+                Iterator<Entry<String, String>> it = this.properties.entrySet().iterator();
+                while (it.hasNext()) {
+                    Entry<String, String> property = it.next();
+                    json.append("\"").append(escape(property.getKey())).append("\" : \"").append(escape(property.getValue())).append("\"");
+                    if (it.hasNext()) {
+                        json.append(",");
+                    }
+
+                }
+            }
+            json.append(" }");
+            json.append("}");
+
+            return json.toString();
+        }
     }
 
     /**
@@ -403,24 +413,21 @@ public class Indicative {
         }//for
         return sb.toString();
     }
-    
     /**
      * An example of the kind of method you should create to easily add groups
-     * of properties to every event.  This method should take as a parameter an 
-     * Object representing your user, and add certain properties based on that users's
-     * attributes.
+     * of properties to every event. This method should take as a parameter an
+     * Object representing your user, and add certain properties based on that
+     * users's attributes.
      */
-    
     /**
-     public Indicative addCommonProperties(UsersEntity user){
-        properties.add("Gender", user.getGender()); 
-        properties.add("Age", user.getAge());
-     
-        return this; 
-     }
-     
+     * public Indicative addCommonProperties(UsersEntity user){
+     *      properties.add("Gender", user.getGender()); properties.add("Age",
+     *      user.getAge());
+     *
+     *      return this; 
+     * }
+     *
      */
-    
     private static final Logger LOG = Logger.getLogger(Indicative.class.getName());
     /**
      * The number of threads to use when POSTing to the endpoint
