@@ -74,12 +74,14 @@ public class Indicative {
             try {
                 URL url = new URL(REST_ENDPOINT_URL);
                 con = (HttpURLConnection) url.openConnection();
+                
+                byte[] bodyBytes = body.getBytes("UTF-8");
 
                 // Add request header
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Accept-Charset", "UTF-8");
                 con.addRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                con.setRequestProperty("Content-Length", "" + Integer.toString(body.getBytes("UTF-8").length));
+                con.setRequestProperty("Content-Length", "" + Integer.toString(bodyBytes.length));
 
                 // Send post request
                 con.setDoOutput(true);
@@ -88,7 +90,7 @@ public class Indicative {
                 con.setUseCaches(false);
 
                 wr = new DataOutputStream(con.getOutputStream());
-                wr.writeBytes(body);
+                wr.write(bodyBytes);
                 wr.flush();
                 wr.close();
                 if (DEBUG) {
