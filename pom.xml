@@ -4,11 +4,21 @@
 
     <groupId>com.indicative.client.java</groupId>
     <artifactId>Indicative-Java</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>Indicative-Java</name>
+    <description>Java Client for Indicative's REST API</description>
     <url>https://github.com/Indicative/Indicative-Java</url>
+    
+    <licenses>
+        <license>
+            <name>Simplified BSD License</name>
+            <distribution>repo</distribution>
+            <url>https://github.com/Indicative/Indicative-Java/blob/master/LICENSE.txt</url>
+            <comments>2-clause BSD License, aka the FreeBSD License. See LICENSE.txt</comments>
+        </license>
+    </licenses>
     
     <scm>
         <url>https://github.com/Indicative/Indicative-Java</url>
@@ -16,6 +26,20 @@
         <developerConnection>scm:git:git@github.com:Indicative/Indicative-Java.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+    
+    <developers>
+        <developer>
+            <id>andrewbeale</id>
+            <name>Andrew Beale</name>
+            <email>andrew.beale@indicative.com</email>
+        </developer>
+    </developers>
+    
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     
     <build>
         <plugins>
