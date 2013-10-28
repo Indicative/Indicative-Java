@@ -20,8 +20,9 @@
     </licenses>
     
     <scm>
-        <url>scm:git:git://Indicative/Indicative-Java.git</url>
-        <connection>scm:git:git://Indicative/Indicative-Java.git</connection>
+        <connection>scm:git:git://github.com/Indicative/Indicative-Java.git</connection>
+        <developerConnection>scm:git:https://bealeindicative@github.com/Indicative/Indicative-Java.git</developerConnection>
+        <url>https://github.com/Indicative/Indicative-Java</url>
     </scm>
     
     <developers>
