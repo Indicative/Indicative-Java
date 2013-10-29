@@ -10,7 +10,14 @@ Features:
 
 Sample usage:
 
-    // First, call the Indicative class's apiKey() method and pass in your API key, 
+    // If you're integrating with a Maven project, just add the following dependency to your pom.xml file:
+    <dependency>
+	    <groupId>com.indicative.client.java</groupId>
+	    <artifactId>indicative-java</artifactId>
+	    <version>1.0.2</version>
+    </dependency>
+
+    // Call the Indicative class's apiKey() method and pass in your API key, 
     // which you can find on the Project Settings page. You'll only have to do this once.
     Indicative.apiKey("Your-API-Key-Goes-Here");
 
