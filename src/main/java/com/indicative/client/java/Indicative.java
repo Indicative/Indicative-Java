@@ -36,6 +36,11 @@ public class Indicative {
      * Enable this to see some basic details printed to the default logger
      */
     private static final boolean DEBUG = false;
+
+    /**
+     * The number of times to retry a failed POST to Indicative before giving up.
+     */
+    private static final int NUM_RETRY_ATTEMPTS = 2;
     
     /**
      * A class used to asynchronously post Events to the Indicative API
@@ -60,17 +65,29 @@ public class Indicative {
          */
         @Override
         public void run() {
-            sendPost(event.toJson());
+            int retryAttempt = 0;
+            boolean callSuccessful = false;
+            while (!callSuccessful && retryAttempt <= NUM_RETRY_ATTEMPTS) {
+                callSuccessful = sendPost(event.toJson());
+                retryAttempt++;
+            }
+
+            if (!callSuccessful) {
+                LOG.log(Level.SEVERE, "Unable to POST event to Indicative after {0} failed attempts : {1}", new Object[] { retryAttempt, this.event.toJson() });
+            }
         }
 
         /**
          * Sends the Event's JSON representation to the Indicative API endpoint via an HTTP POST.
          *
          * @param body
+         * @return a boolean that's true if the POST was successful
          */
-        private void sendPost(String body) {
+        private boolean sendPost(String body) {
             HttpURLConnection con = null;
             DataOutputStream wr = null;
+            boolean successful = false;
+
             try {
                 URL url = new URL(REST_ENDPOINT_URL);
                 con = (HttpURLConnection) url.openConnection();
@@ -110,9 +127,12 @@ public class Indicative {
                     }
 
                     in.close();
-                    LOG.log(Level.SEVERE, response.toString());
 
+                    LOG.log(Level.SEVERE, response.toString());
+                } else {
+                    successful = true;
                 }
+
             } catch (MalformedURLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
@@ -131,6 +151,8 @@ public class Indicative {
                     }
                 }
             }
+
+            return successful;
         }
     }
     
@@ -139,7 +161,6 @@ public class Indicative {
      * 
      * @param apiKey The API key for your project. You can find this on your Project Settings page.
      */
-
     public static void apiKey(String apiKey) {
         Indicative.API_KEY = apiKey;
     }
