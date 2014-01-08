@@ -67,8 +67,10 @@ public class Indicative {
         public void run() {
             int retryAttempt = 0;
             boolean callSuccessful = false;
+            String eventJson = event.toJson();
+
             while (!callSuccessful && retryAttempt <= NUM_RETRY_ATTEMPTS) {
-                callSuccessful = sendPost(event.toJson());
+                callSuccessful = sendPost(eventJson);
                 retryAttempt++;
             }
 
