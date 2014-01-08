@@ -3,7 +3,7 @@
 
     <groupId>com.indicative.client.java</groupId>
     <artifactId>Indicative-Java</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <name>Indicative-Java</name>
