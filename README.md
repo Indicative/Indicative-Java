@@ -14,7 +14,7 @@ Sample usage:
     <dependency>
 	    <groupId>com.indicative.client.java</groupId>
 	    <artifactId>indicative-java</artifactId>
-	    <version>1.0.2</version>
+	    <version>1.0.3</version>
     </dependency>
 
     // Call the Indicative class's apiKey() method and pass in your API key, 
