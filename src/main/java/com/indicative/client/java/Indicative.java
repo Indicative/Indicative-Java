@@ -101,6 +101,7 @@ public class Indicative {
                 con.setRequestProperty("Accept-Charset", "UTF-8");
                 con.addRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 con.setRequestProperty("Content-Length", "" + Integer.toString(bodyBytes.length));
+                con.addRequestProperty("Indicative-Client", "Java");
 
                 // Send post request
                 con.setDoOutput(true);
